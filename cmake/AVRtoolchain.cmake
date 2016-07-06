@@ -14,7 +14,7 @@ endif ()
 # toolchain starts with defining mandatory variables
 ##########################################################################
 set(CMAKE_SYSTEM_NAME Generic)
-# set(CMAKE_SYSTEM_PROCESSOR avr)
+set(CMAKE_SYSTEM_PROCESSOR avr)
 
 set(CMAKE_ASM_COMPILER ${AVR_CC})
 set(CMAKE_C_COMPILER ${AVR_CC})

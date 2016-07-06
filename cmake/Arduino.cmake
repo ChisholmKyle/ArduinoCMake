@@ -38,6 +38,8 @@ if(NOT ARDUINO_ROOT)
         /opt/local/arduino*
         /Applications/Arduino.app/Contents/Java
         /Applications/Arduino.app/Contents/Resources/Java
+        "/c/Program Files (x86)/Arduino"
+        "/c/Program Files/Arduino"
     )
     find_path(ARDUINO_ROOT
         NAMES lib/version.txt
