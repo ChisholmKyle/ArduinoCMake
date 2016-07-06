@@ -51,7 +51,7 @@ This is not the only way to use Arduino and CMake on Windows, but it is likely a
 
 ## Set your board and serial communications
 
-After the line `set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")` in your CMakeLists.txt file, set the board. Consult the [cmake](cmake/) subfolder in this repository for the various boards already defined that you can include (without the .cmake extension). The blink example lists `include("ArduinoProMini5V328")`. If you have an Uno, change this line to `include("ArduinoUno")`. The following table lists the boards available:
+Refer to the [CMakeLists.txt](CMakeLists.txt) file for an example blink program. After the line `set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")` in your CMakeLists.txt file, set the board. Consult the [cmake](cmake/) subfolder in this repository for the various boards already defined that you can include (without the .cmake extension). The blink example lists `include("ArduinoProMini5V328")`. If you have an Uno, change this line to `include("ArduinoUno")`. The following table lists the boards available:
 
 | Boards |
 | ------ |
@@ -63,7 +63,7 @@ After the line `set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/
 | ArduinoProMini3V328 |
 | ArduinoProMini5V328 |
 
-The serial port for communications and uploading to the Arduino needs to be set with the variable `ARDUINO_PORT` and if serial communications are being used with the Arduino and picocom, the `ARDUINO_SERIAL_SPEED` needs to be set. The following table described the variables:
+The serial port for communications and uploading to the Arduino needs to be set with the variable `ARDUINO_PORT` and if serial communications are being used with the Arduino and picocom, the `ARDUINO_SERIAL_SPEED` needs to be set. The following table describes the variables:
 
 | Serial | Notes |
 | ---- | ----- |
