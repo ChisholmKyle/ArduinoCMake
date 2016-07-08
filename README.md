@@ -45,7 +45,7 @@ This is not the only way to use Arduino and CMake on Windows, but it is likely a
 1. Install and update [MSYS2](https://msys2.github.io/)
 1. Download and extract the [Amtel AVR 8-bit Toolchain for Windows](http://www.atmel.com/tools/atmelavrtoolchainforwindows.aspx). This example assumes you've put the contents in C:/avr-gcc
 1. In your MSYS2 MinGW32 shell, install dependencies with the command: `pacman -Syu msys/git msys/make mingw32/mingw-w64-i686-cmake mingw32/mingw-w64-i686-avrdude`
-1. Set your PATH to include the Amtel AVR toolchain with the command `export PATH=$PATH:/c/avr-gcc`
+1. Set your PATH to include the Amtel AVR toolchain with the command `export PATH=$PATH:/c/avr-gcc/bin`
 1. Set the Arduino path environment variable `export ARDUINO_ROOT="/c/Program Files (x86)/Arduino"`. Note that this directory may be different for your installed Arduino library.
 1. Compile the example as described below.
 
