@@ -1,18 +1,18 @@
 
 set(ARDUINO_CUSTOM_LIB_NAME ard_utils)
 
-if(NOT ARDUINO_CUSTOM_LIB_PATHS)
-    message(FATAL_ERROR "Set the variable ARDUINO_CUSTOM_LIB_PATHS in your CMakeList.txt file before including ArduinoLibraryArdUtils.cmake")
+if(NOT ARDUINO_CMAKE)
+    message(FATAL_ERROR "Set the variable ARDUINO_CMAKE before including ArduinoLibraryArdUtils.cmake")
 endif()
 
 # directory
 find_path(ARDUINO_CUSTOM_LIB_DIR
     NAMES ${ARDUINO_CUSTOM_LIB_NAME}
-    PATHS ${ARDUINO_CUSTOM_LIB_PATHS})
+    PATHS ${ARDUINO_CMAKE}/libraries)
 
 if(NOT ARDUINO_CUSTOM_LIB_DIR)
     # not found
-    message(FATAL_ERROR "Could not find ard_utils directory. Check that ARDUINO_CUSTOM_LIB_PATHS contains ard_utils")
+    message(FATAL_ERROR "Could not find ard_utils directory. Check that ${ARDUINO_CMAKE}/libraries contains ard_utils")
 endif()
 
 # headers

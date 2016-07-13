@@ -1,15 +1,24 @@
 cmake_minimum_required (VERSION 2.6)
 project (ArduinoCMakeExample)
 
+if(NOT ARDUINO_ROOT)
+    message(FATAL_ERROR "Variable ARDUINO_ROOT not set")
+endif()
+if(NOT ARDUINO_CMAKE)
+    message(FATAL_ERROR "Variable ARDUINO_CMAKE not set")
+endif()
+
 # ################ #
-# command examples #
+# command example #
 # ################ #
 
-# make sure avr-gcc is in PATH, and environemnt variable ARDUINO_ROOT is set
-# then run the following command:
-# cmake -G "Unix Makefiles" .. \
-#       -DCMAKE_TOOLCHAIN_FILE=cmake/AVRtoolchain.cmake 
-#       -DARDUINO_ROOT="${ARDUINO_ROOT}"
+# 1. make sure avr-gcc is in PATH
+# 2. set environment variables ARDUINO_ROOT and ARDUINO_CMAKE
+# 3. run the following command:
+# cmake -G "Unix Makefiles" .. 
+#       -DCMAKE_TOOLCHAIN_FILE="${ARDUINO_CMAKE}/AVRtoolchain.cmake" 
+#       -DARDUINO_ROOT="${ARDUINO_ROOT}" 
+#       -DARDUINO_CMAKE="${ARDUINO_CMAKE}"
 
 # tested with:
 #    Windows MYS2 shell
@@ -25,7 +34,7 @@ set(FIRMWARE_TARGET firmware)
 
 # arduino cmake modules folder
 # ----------------------------
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${PROJECT_SOURCE_DIR}/cmake")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${ARDUINO_CMAKE}/modules")
 
 # arduino board
 include("ArduinoProMini5V328")
@@ -34,15 +43,14 @@ set(ARDUINO_PORT "COM3")
 set(ARDUINO_SERIAL_SPEED "115200")
 # arduino cmake script
 include("Arduino")
-# optional Wire library to include
-include("ArduinoLibraryWire")
+# optional Wire library to include (from Arduino)
+# include("ArduinoLibraryWire")
 
 # ################ #
 # custom libraries #
 # ################ #
 
-# custom libraries are simply arduino source files in a directory with subfodlers "include" and "src"
-# set(ARDUINO_CUSTOM_LIB_PATHS "${PROJECT_SOURCE_DIR}/..")
+# optional custom library to include
 # include("ArduinoLibraryArdUtils")
 
 # ##################### #
