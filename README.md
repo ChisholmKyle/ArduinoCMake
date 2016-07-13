@@ -27,7 +27,7 @@ Your flavour of Linux may have different package managers and names for the prer
 
 1. Install prerequisites with the command `sudo apt-get install git gcc-avr binutils-avr avr-libc avrdude picocom cmake make`
 1. Set the Arduino path environment variable `export ARDUINO_ROOT="/opt/arduino"`. Note that this directory is likely different for your installed Arduino library.
-1. Compile the example as described below.
+1. Set your board and serial port, then compile the example (see below).
 
 ### Apple (Macports)
 
@@ -36,7 +36,7 @@ If you want a package manager for Mac, [Macports](https://www.macports.org/) may
 1. Install and update [Macports](https://www.macports.org/)
 1. Install prerequisites with the command `sudo port install git avr-gcc avr-binutils avr-libc avrdude picocom cmake gmake`
 1. Set the Arduino path environment variable `export ARDUINO_ROOT="/Applications/Arduino.app/Contents/Java"`. Note that this directory may be different for your installed Arduino library.
-1. Compile the example as described below.
+1. Set your board and serial port, then compile the example (see below).
 
 ### Windows (MSYS2)
 
@@ -47,7 +47,7 @@ This is not the only way to use Arduino and CMake on Windows, but it is likely a
 1. In your MSYS2 MinGW32 shell, install dependencies with the command: `pacman -Syu msys/git msys/make mingw32/mingw-w64-i686-cmake mingw32/mingw-w64-i686-avrdude`
 1. Set your PATH to include the Amtel AVR toolchain with the command `export PATH=$PATH:/c/avr8-gnu-toolchain/bin`
 1. Set the Arduino path environment variable `export ARDUINO_ROOT="/c/Program Files (x86)/Arduino"`. Note that this directory may be different for your installed Arduino library.
-1. Compile the example as described below.
+1. Set your board and serial port, then compile the example (see below).
 
 ## Set your board and serial communications
 
