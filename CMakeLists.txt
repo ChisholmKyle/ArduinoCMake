@@ -25,27 +25,36 @@ set(FIRMWARE_TARGET firmware)
 
 # arduino cmake modules folder
 # ----------------------------
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${PROJECT_SOURCE_DIR}/cmake")
 
 # arduino board
 include("ArduinoProMini5V328")
 # upload port and serial picocom communications settings
-set(ARDUINO_PORT "/dev/tty.usbmodemXXXXXX")
+set(ARDUINO_PORT "COM3")
 set(ARDUINO_SERIAL_SPEED "115200")
 # arduino cmake script
 include("Arduino")
 # optional Wire library to include
 include("ArduinoLibraryWire")
 
+# ################ #
+# custom libraries #
+# ################ #
+
+# custom libraries are simply arduino source files in a directory with subfodlers "include" and "src"
+# set(ARDUINO_CUSTOM_LIB_PATHS "${PROJECT_SOURCE_DIR}/..")
+# include("ArduinoLibraryArdUtils")
+
 # ##################### #
 # Firmware source files #
 # ##################### #
 
 # Include files
-include_directories("${CMAKE_SOURCE_DIR}/include")
+include_directories("${PROJECT_SOURCE_DIR}/include")
 
 # sources
-file(GLOB SOURCES "${PROJECT_SOURCE_DIR}/src/*.cpp")
+file(GLOB SOURCES "${PROJECT_SOURCE_DIR}/src/*.cpp"
+                  "${PROJECT_SOURCE_DIR}/src/*.c")
 
 # target
 add_executable(${FIRMWARE_TARGET}
