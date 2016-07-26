@@ -23,7 +23,7 @@ typedef enum ArdFilterType {
     z: state of 4 previous inputs for each sos, size (4 x num_scns)
  */
 typedef struct ArdSosFilter {
-    double *z;
+    double **(z[4]);
     double freq;
     double w[2];
     double *sos;
@@ -32,7 +32,7 @@ typedef struct ArdSosFilter {
 } ArdSosFilter;
 
 /* run filter */
-void ro_sos_run (ArdSosFilter *filt, double restrict* x);
+void ard_sos_run (ArdSosFilter *filt, double restrict* x);
 
 #ifdef __cplusplus
 }

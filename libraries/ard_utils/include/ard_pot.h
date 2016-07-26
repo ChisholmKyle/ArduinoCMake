@@ -6,7 +6,7 @@
 extern "C" {
 #endif
 
-typedef struct ArdPot {
+typedef struct ArdPot { 
     int pin;
     struct {
         double a;

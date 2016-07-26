@@ -1,13 +1,16 @@
 #include <Arduino.h>
 
+// Pin 13 has an LED connected on most Arduino boards
+#define PIN_LED 13
+
 void loop() {
     Serial.println("LED on");
-    digitalWrite(13, HIGH);   // Set the LED on
-    delay(3000);              // Wait for three seconds
+    digitalWrite(PIN_LED, HIGH);   // Set the LED on
+    delay(1000);                   // Wait for one second
 
     Serial.println("LED off");
-    digitalWrite(13, LOW);    // Set the LED off
-    delay(3000);              // Wait for three seconds
+    digitalWrite(PIN_LED, LOW);    // Set the LED off
+    delay(1000);                   // Wait for one second
 }
 
 int main(void)
@@ -15,10 +18,8 @@ int main(void)
     // Mandatory init
     init();
 
-    Serial.begin(115200);
-
-    // Pin 13 has an LED connected on most Arduino boards
-    pinMode(13, OUTPUT);
+    // set LED pin mode as output
+    pinMode(PIN_LED, OUTPUT);
 
     while (true)
         loop();

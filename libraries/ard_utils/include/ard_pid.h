@@ -38,11 +38,11 @@ inline double ard_pid_run_fwd(const double des, const double meas,
                              const ArdPidParam *param) {
 
     /* error */
-    double e = des - meas;
+    const double e = des - meas;
 
     /* calculate output */
-    double t2 = 1.0/param->tf;
-    double t3 = param->kp*param->tf;
+    const double t2 = 1.0/param->tf;
+    const double t3 = param->kp*param->tf;
     double u = state->e2*t2*(param->kd+t3-param->kp*ts+param->ki*(ts*ts)-param->ki*param->tf*ts)+t2*state->u1*(param->tf*2.0-ts)+e*t2*(param->kd+t3)-state->e1*t2*(param->kd*2.0+param->kp*param->tf*2.0-param->kp*ts-param->ki*param->tf*ts)-t2*state->u2*(param->tf-ts);
 
     /* saturate output */
@@ -66,7 +66,7 @@ inline double ard_pid_run_back(const double des, const double meas,
                             const ArdPidParam *param) {
 
     /* error */
-    double e = des - meas;
+    const double e = des - meas;
 
     /* calculate output */
     double u = (e*param->kd-state->e1*param->kd*2.0+state->e2*param->kd+param->tf*state->u1*2.0-param->tf*state->u2+ts*state->u1+e*param->ki*(ts*ts)+e*param->kp*param->tf+e*param->kp*ts-state->e1*param->kp*param->tf*2.0+state->e2*param->kp*param->tf-state->e1*param->kp*ts+e*param->ki*param->tf*ts-state->e1*param->ki*param->tf*ts)/(param->tf+ts);
@@ -91,10 +91,10 @@ inline double ard_pid_run_trap(const double des, const double meas,
                             const ArdPidParam *param) {
 
     /* error */
-    double e = des - meas;
+    const double e = des - meas;
 
     /* calculate output */
-    double t2 = ts*ts;
+    const double t2 = ts*ts;
     double u = (e*param->kd*2.0-state->e1*param->kd*4.0+state->e2*param->kd*2.0+param->tf*state->u1*4.0-param->tf*state->u2*2.0+ts*state->u2+e*param->ki*t2*(1.0/2.0)+e*param->kp*param->tf*2.0+state->e1*param->ki*t2+state->e2*param->ki*t2*(1.0/2.0)+e*param->kp*ts-state->e1*param->kp*param->tf*4.0+state->e2*param->kp*param->tf*2.0-state->e2*param->kp*ts+e*param->ki*param->tf*ts-state->e2*param->ki*param->tf*ts)/(param->tf*2.0+ts);
 
     /* saturate output */

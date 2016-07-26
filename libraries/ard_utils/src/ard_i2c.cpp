@@ -14,7 +14,7 @@ void ard_i2c_slave_setup(const uint8_t slave_address, ArdI2CReqHandler request_h
     Wire.begin(slave_address);
 }
 
-// master
+// master write to slave
 size_t ard_i2c_slave_write(uint8_t *data, const size_t size) {
     if (size <= BUFFER_LENGTH) {
         return Wire.write(data, (uint8_t) size);

@@ -1,4 +1,13 @@
-
+/**
+ * @file       ard_crc.c
+ * @author     Kyle Chisholm (dev@kylechisholm.ca)
+ * @brief      16-bit Cyclic Redundancy Check (crc16-ccitt)
+ *
+ * @details
+ *
+ * Cyclic redundancy check. See group @ref ArdCrc
+ *
+ */
 
 #include "ard_crc.h"
 
@@ -48,9 +57,9 @@ static const uint16_t crc_table [256] = {
     0x2e93, 0x3eb2, 0x0ed1, 0x1ef0
 };
 
-
-static const uint16_t crc_seed = 0xffff;
-static const uint16_t crc_final = 0;
+// seed and final value
+#define ARD_CRC16_SEED 0xffff
+#define ARD_CRC16_FINAL 0x0000
 
 static inline uint16_t ard_crc16_ccitt(const unsigned char *data, const size_t len, const uint16_t seed, const uint16_t final)
 {
@@ -70,13 +79,12 @@ static inline uint16_t ard_crc16_ccitt(const unsigned char *data, const size_t l
 }
 
 bool ard_crc16_ccitt_test(const unsigned char *data, const size_t len) {
-    uint16_t crc_result = ard_crc16_ccitt(data, len, crc_seed, crc_final);
-    return (crc_result == crc_final);
-    // return (crc_test == crc_result);
+    uint16_t crc_result = ard_crc16_ccitt(data, len, ARD_CRC16_SEED, ARD_CRC16_FINAL);
+    return (crc_result == ARD_CRC16_FINAL);
 }
 
 uint16_t ard_crc16_ccitt_append(unsigned char *data, const size_t len) {
-    uint16_t crc_result = ard_crc16_ccitt(data, len, crc_seed, crc_final);
+    uint16_t crc_result = ard_crc16_ccitt(data, len, ARD_CRC16_SEED, ARD_CRC16_FINAL);
 
     data [len] = (unsigned char)((crc_result >> 8) & 0xff);
     data [len + 1] = (unsigned char)(crc_result & 0xff);
