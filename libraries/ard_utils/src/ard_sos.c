@@ -1,15 +1,10 @@
 
 #include "ard_sos.h"
 
-static inline void ro_filter_direct_form_II_transposed (double *restrict x,
-                                                        double *restrict z,
-                                                        const double *restrict b,
-                                                        const double *restrict a);
-
-static inline void ro_filter_direct_form_II_transposed (double *restrict x,
-                                                        double *restrict z,
-                                                        const double *restrict b,
-                                                        const double *restrict a)
+static inline void ro_filter_direct_form_II_transposed (double * x,
+                                                        double * z,
+                                                        const double * b,
+                                                        const double * a)
 {
     /* shift z */
     z[1] = z[0];
@@ -23,7 +18,7 @@ static inline void ro_filter_direct_form_II_transposed (double *restrict x,
     (*x) = y;
 }
 
-void ro_sos_run (ArdSosFilter *filt, double *restrict x)
+void ro_sos_run (ArdSosFilter *filt, double * x)
 {
     for (size_t j = 0; j < filt->num_scns; j++) {
         ro_filter_direct_form_II_transposed (x, /* x */

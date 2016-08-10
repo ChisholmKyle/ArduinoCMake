@@ -10,11 +10,11 @@
 enable_language(ASM)
 
 # C only fine tunning
-set(TUNING_FLAGS "-funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums")
+set(TUNING_FLAGS "-funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums -Wl,--gc-sections -ffunction-sections -fdata-sections")
 
 # Compilation flags
 set(CMAKE_ASM_FLAGS "-mmcu=${ARDUINO_MCU} -DF_CPU=${ARDUINO_FCPU}")
-set(CMAKE_CXX_FLAGS "${CMAKE_ASM_FLAGS} -Os")
+set(CMAKE_CXX_FLAGS "${CMAKE_ASM_FLAGS} ${TUNING_FLAGS} -Os")
 set(CMAKE_C_FLAGS "${CMAKE_CXX_FLAGS} ${TUNING_FLAGS} -Wall -std=gnu99")
 
 # Find arduino root path

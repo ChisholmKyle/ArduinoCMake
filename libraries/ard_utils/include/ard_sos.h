@@ -6,6 +6,8 @@
 extern "C" {
 #endif
 
+#include <stdlib.h>
+
 typedef enum ArdFilterType {
     EARD_SOS_LOW,
     EARD_SOS_HIGH,
@@ -23,7 +25,7 @@ typedef enum ArdFilterType {
     z: state of 4 previous inputs for each sos, size (4 x num_scns)
  */
 typedef struct ArdSosFilter {
-    double **(z[4]);
+    double *z;
     double freq;
     double w[2];
     double *sos;
@@ -32,7 +34,7 @@ typedef struct ArdSosFilter {
 } ArdSosFilter;
 
 /* run filter */
-void ard_sos_run (ArdSosFilter *filt, double restrict* x);
+void ard_sos_run (ArdSosFilter *filt, double * x);
 
 #ifdef __cplusplus
 }

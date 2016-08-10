@@ -1,6 +1,6 @@
 
 # Arduino directories
-set(ARDUINO_WIRE_DIR "${ARDUINO_ROOT}/hardware/arduino/avr/libraries/Wire")
+set(ARDUINO_WIRE_DIR "${ARDUINO_ROOT}/hardware/arduino/avr/libraries/Wire/src")
 
 # Wire headers
 include_directories(${ARDUINO_WIRE_DIR})

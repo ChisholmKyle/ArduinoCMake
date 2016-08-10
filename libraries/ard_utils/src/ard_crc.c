@@ -61,7 +61,7 @@ static const uint16_t crc_table [256] = {
 #define ARD_CRC16_SEED 0xffff
 #define ARD_CRC16_FINAL 0x0000
 
-static inline uint16_t ard_crc16_ccitt(const unsigned char *data, const size_t len, const uint16_t seed, const uint16_t final)
+static inline uint16_t ard_crc16_ccitt(const uint8_t *data, const size_t len, const uint16_t seed, const uint16_t final)
 {
 
     size_t count;
@@ -78,16 +78,16 @@ static inline uint16_t ard_crc16_ccitt(const unsigned char *data, const size_t l
 
 }
 
-bool ard_crc16_ccitt_test(const unsigned char *data, const size_t len) {
+bool ard_crc16_ccitt_test(const uint8_t *data, const size_t len) {
     uint16_t crc_result = ard_crc16_ccitt(data, len, ARD_CRC16_SEED, ARD_CRC16_FINAL);
     return (crc_result == ARD_CRC16_FINAL);
 }
 
-uint16_t ard_crc16_ccitt_append(unsigned char *data, const size_t len) {
+uint16_t ard_crc16_ccitt_append(uint8_t *data, const size_t len) {
     uint16_t crc_result = ard_crc16_ccitt(data, len, ARD_CRC16_SEED, ARD_CRC16_FINAL);
 
-    data [len] = (unsigned char)((crc_result >> 8) & 0xff);
-    data [len + 1] = (unsigned char)(crc_result & 0xff);
+    data [len] = (uint8_t)((crc_result >> 8) & 0xff);
+    data [len + 1] = (uint8_t)(crc_result & 0xff);
 
     return crc_result;
 }

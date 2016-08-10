@@ -2,11 +2,11 @@
 #ifndef ARD_TIMING_H
 #define ARD_TIMING_H
 
+#include <Arduino.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-#include <Arduino.h>
 
 typedef struct ArdTiming {
     unsigned long prev;

@@ -29,38 +29,38 @@ extern "C" {
  */
 
 /**
- * @brief      Tests a byte array (unsigned char) appended with a crc checksum 
+ * @brief      Tests a byte array (unsigned char) appended with a crc checksum
  *             to see if the message is intact.
  *
  * @param[in]  data  Byte (unsigned char) array with appended CRC checksum
- * @param[in]  len   Length of input array (number of bytes) including 
+ * @param[in]  len   Length of input array (number of bytes) including
  *                   the 2 checksum bytes appended to the array
  *
  * @return     Boolean `true` if checksum for the array is valid, `false` otherwise
  */
-bool ard_crc16_ccitt_test(const unsigned char *restrict data, const size_t len);
+bool ard_crc16_ccitt_test(const uint8_t *data, const size_t len);
 
 
 
 /**
  * @brief      Appends CRC checksum to data array.
  *
- * @param      data  The data array to append the CRC checksum. This array 
- *                   must be contiguous in memory with 2 extra bytes so that the 
+ * @param      data  The data array to append the CRC checksum. This array
+ *                   must be contiguous in memory with 2 extra bytes so that the
  *                   CRC checksum can be appended.
- * @param[in]  len   The length of the data array (number of bytes) not including 
+ * @param[in]  len   The length of the data array (number of bytes) not including
  *                   the two extra bytes required for the appended array.
  *
- * @return     The CRC checksum. The data input parameter is also appended with 
+ * @return     The CRC checksum. The data input parameter is also appended with
  *             the 2 checksum bytes.
  */
-uint16_t ard_crc16_ccitt_append(unsigned char *restrict data, const size_t len);
+uint16_t ard_crc16_ccitt_append(uint8_t *data, const size_t len);
 
 
 /**
  * @}
  */
- 
+
 #ifdef __cplusplus
 }
 #endif
