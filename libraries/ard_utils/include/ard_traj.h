@@ -2,12 +2,12 @@
 #ifndef ARD_TRAJ_H
 #define ARD_TRAJ_H
 
+#include <stdlib.h>
+#include <stdbool.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-#include <stdlib.h>
-#include <stdbool.h>
 
 typedef struct ArdTrajSeq {
     int **out;
@@ -44,13 +44,13 @@ inline int ard_traj_seq_step(ArdTrajSeq *seq) {
  * @param      seq_timed  The sequence timed
  * @param      seq_out    The sequence out
  * @param[in]  time_ms    The time milliseconds
- * @param[in]  dt_scale   The scale
  *
  * @return     { description_of_the_return_value }
  */
-inline bool ard_traj_seq_timed_step(ArdTrajSeqTimed *seq_timed, int *seq_out, const int time_ms, const double dt_scale) {
-    if ((dt_scale <= 0.0 && (time_ms - seq_timed->target_ms > seq_timed->timing_ms[seq_timed->seq.index])) ||
-        (dt_scale * ((double) (time_ms - seq_timed->target_ms)) > (double) seq_timed->timing_ms[seq_timed->seq.index])) {
+inline bool ard_traj_seq_timed_step(ArdTrajSeqTimed *seq_timed, int *seq_out, const int time_ms) {
+    if (time_ms - seq_timed->target_ms > seq_timed->timing_ms[seq_timed->seq.index]) {
+     // ||
+     //    (dt_scale * ((double) (time_ms - seq_timed->target_ms)) > (double) seq_timed->timing_ms[seq_timed->seq.index])) {
         /* advance step  */
         seq_timed->seq.index += 1;
         if (seq_timed->seq.index == seq_timed->seq.num.steps) seq_timed->seq.index = 0;
