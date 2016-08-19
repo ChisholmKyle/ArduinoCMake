@@ -38,6 +38,10 @@ If you want a package manager for Mac, [Macports](https://www.macports.org/) may
 1. Set the Arduino path environment variable `export ARDUINO_ROOT="/Applications/Arduino.app/Contents/Java"`. Note that this directory may be different for your installed Arduino library.
 1. Set your board and serial port, then compile the example (see below).
 
+### Windows (Ubuntu Bash)
+
+TODO: It would be interesting to try the (beta) [Windows 10 Linux/Ubuntu bash](https://msdn.microsoft.com/en-us/commandline/wsl/about) environment, especially if picocom can be used.
+
 ### Windows (MSYS2)
 
 This is not the only way to use Arduino and CMake on Windows, but it is likely a good choice for you if you're comfortable with Linux or Mac OS X.
@@ -61,7 +65,7 @@ After the line `set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${ARDUINO_CMAKE}/mod
 | ArduinoMega1280 |
 | ArduinoMega2560 |
 | ArduinoProMini3V168 |
-| ArduinoProMini5V168 | 
+| ArduinoProMini5V168 |
 | ArduinoProMini3V328 |
 | ArduinoProMini5V328 |
 
@@ -88,7 +92,7 @@ See the [CMakeLists.txt](CMakeLists.txt) file for an example blink program. Make
     cd ArduinoCMake && mkdir build && cd build
     cmake -G "Unix Makefiles" .. \
           -DCMAKE_TOOLCHAIN_FILE="${ARDUINO_CMAKE}/modules/AVRtoolchain.cmake" \
-          -DARDUINO_ROOT="${ARDUINO_ROOT}" \ 
+          -DARDUINO_ROOT="${ARDUINO_ROOT}" \
           -DARDUINO_CMAKE="${ARDUINO_CMAKE}"
     make hex
 
