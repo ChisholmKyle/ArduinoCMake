@@ -2,6 +2,8 @@
 #ifndef ARD_MPU6050_H
 #define ARD_MPU6050_H
 
+#include "Arduino.h"
+
 // bits in hex
 #define ARD_MPU6050_BIT_0  0x01
 #define ARD_MPU6050_BIT_1  0x02
@@ -101,12 +103,10 @@
 #define ARD_MPU6050_READ_GYRO  0x43
 #define ARD_MPU6050_READ_EXT   0x49
 
-
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include "Arduino.h"
 #include "ard_i2c.h"
 
 // Selection enums //
@@ -170,7 +170,7 @@ typedef struct ArdMpu6050Config {
 // selection functions //
 // ------------------- //
 
-static inline uint8_t ard_mpu6050_configure_select_samplerate(eArdMpu6050SampleRate choice) {
+inline uint8_t ard_mpu6050_configure_select_samplerate(eArdMpu6050SampleRate choice) {
     switch(choice) {
         case EARD_MPU6050_SAMPLERATE_1000HZ:        return ARD_MPU6050_SAMPLERATE_VALUE_1000HZ;
         case EARD_MPU6050_SAMPLERATE_500HZ:         return ARD_MPU6050_SAMPLERATE_VALUE_500HZ;
@@ -194,7 +194,7 @@ static inline uint8_t ard_mpu6050_configure_select_samplerate(eArdMpu6050SampleR
     }
 }
 
-static inline uint8_t ard_mpu6050_configure_select_lpf_cutoff(eArdMpu6050LpfCutoff choice) {
+inline uint8_t ard_mpu6050_configure_select_lpf_cutoff(eArdMpu6050LpfCutoff choice) {
     switch(choice) {
         case EARD_MPU6050_LPF_CUTOFF_260HZ: return ARD_MPU6050_LOWPASSFILTER_VALUE_260Hz;
         case EARD_MPU6050_LPF_CUTOFF_184HZ: return ARD_MPU6050_LOWPASSFILTER_VALUE_184Hz;
@@ -207,7 +207,7 @@ static inline uint8_t ard_mpu6050_configure_select_lpf_cutoff(eArdMpu6050LpfCuto
     }
 }
 
-static inline uint8_t ard_mpu6050_configure_select_gyrorange(eArdMpu6050GyroRange choice) {
+inline uint8_t ard_mpu6050_configure_select_gyrorange(eArdMpu6050GyroRange choice) {
     switch(choice) {
         case EARD_MPU6050_GYRORANGE_250:  return ARD_MPU6050_GYROCONFIG_VALUE_RANGE250;
         case EARD_MPU6050_GYRORANGE_500:  return ARD_MPU6050_GYROCONFIG_VALUE_RANGE500;
@@ -217,7 +217,7 @@ static inline uint8_t ard_mpu6050_configure_select_gyrorange(eArdMpu6050GyroRang
     }
 }
 
-static inline uint8_t ard_mpu6050_configure_select_accrange(eArdMpu6050AccRange choice) {
+inline uint8_t ard_mpu6050_configure_select_accrange(eArdMpu6050AccRange choice) {
     switch(choice) {
         case EARD_MPU6050_ACCRANGE_2G:  return ARD_MPU6050_ACCELCONFIG_VALUE_RANGE2G;
         case EARD_MPU6050_ACCRANGE_4G:  return ARD_MPU6050_ACCELCONFIG_VALUE_RANGE4G;
