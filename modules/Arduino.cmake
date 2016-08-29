@@ -10,13 +10,13 @@
 enable_language(ASM)
 
 # C only fine tunning
-set(TUNING_FLAGS "-funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums -Wl,--gc-sections -ffunction-sections -fdata-sections -fno-tree-scev-cprop")
-set(WARNING_FLAGS "-Wall -pedantic -Wundef -Werror")
+set(TUNING_FLAGS "-Wl,--gc-sections -ffunction-sections -fdata-sections -fno-tree-scev-cprop -flto -fno-fat-lto-objects")
+set(WARNING_FLAGS "-Wall -pedantic -Werror")
 
 # Compilation flags
-set(CMAKE_ASM_FLAGS "-mmcu=${ARDUINO_MCU} -DF_CPU=${ARDUINO_FCPU}")
-set(CMAKE_CXX_FLAGS "${CMAKE_ASM_FLAGS} ${TUNING_FLAGS} ${WARNING_FLAGS} -std=gnu++14 -Os -DNDEBUG")
-set(CMAKE_C_FLAGS "${CMAKE_ASM_FLAGS} ${TUNING_FLAGS} ${WARNING_FLAGS} --std=gnu99 -Os -DNDEBUG")
+set(CMAKE_ASM_FLAGS "-mmcu=${ARDUINO_MCU} -DF_CPU=${ARDUINO_FCPU} -DARDUINO_ARCH_AVR ${ARDUINO_BOARD_DEFINES}")
+set(CMAKE_CXX_FLAGS "${CMAKE_ASM_FLAGS} ${TUNING_FLAGS} -fuse-linker-plugin -fno-threadsafe-statics ${WARNING_FLAGS} -std=gnu++14 -Os")
+set(CMAKE_C_FLAGS "${CMAKE_ASM_FLAGS} ${TUNING_FLAGS} -fno-fat-lto-objects ${WARNING_FLAGS} --std=gnu99 -Os")
 
 # Find arduino root path
 if(ARDUINO_ROOT)
