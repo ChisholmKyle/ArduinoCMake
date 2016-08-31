@@ -8,6 +8,10 @@
 extern "C" {
 #endif
 
+#ifndef ARD_TIMING_MAX_COUNT
+#define ARD_TIMING_MAX_COUNT 10
+#endif
+
 typedef struct ArdTiming {
     unsigned long prev;
     unsigned long now;
@@ -25,8 +29,13 @@ inline void ard_timing_reset(ArdTiming *timing, const double time_step) {
 inline bool ard_timing_step(ArdTiming *timing) {
     timing->now = micros();
     if (timing->now - timing->prev > timing->ts) {
-        // moving target
-        timing->prev += timing->ts;
+        // moving target loop until caught up or max iterations reached
+        for (int k = 0; k < ARD_TIMING_MAX_COUNT; ++k) {
+            timing->prev += timing->ts;
+            if (timing->now - timing->prev < timing->ts) {
+                break;
+            }
+        }
         return true;
     }
     return false;

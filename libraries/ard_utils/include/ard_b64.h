@@ -31,11 +31,11 @@ extern "C" {
 /**
  * @brief Buffer size macros
  */
-#define RO_B64_BUFFER_ENC_LEN(LENDEC) (((LENDEC + 2) / 3) * 4)
-#define RO_B64_BUFFER_DEC_LEN(LENENC) ((LENENC / 4) * 3)
+#define ARD_B64_BUFFER_ENC_LEN(LENDEC) (((LENDEC + 2) / 3) * 4)
+#define ARD_B64_BUFFER_DEC_LEN(LENENC) ((LENENC / 4) * 3)
 
 /* encode 3 8-bit binary bytes as 4 '6-bit' characters */
-inline void ro_b64_encodeblock (const uint8_t in[3], uint8_t out[4], const size_t len_in)
+inline void ard_b64_encodeblock (const uint8_t in[3], uint8_t out[4], const size_t len_in)
 {
     /* Translation Table as described in RFC1113 */
     static const char ro_cb64[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
@@ -45,7 +45,7 @@ inline void ro_b64_encodeblock (const uint8_t in[3], uint8_t out[4], const size_
     out[3] = (len_in > 2 ? ro_cb64[ in[2] & 0x3f ] : '=');
 }
 
-inline int ro_b64_decodeblock (const uint8_t in[4], uint8_t out[3], const size_t len_out)
+inline int ard_b64_decodeblock (const uint8_t in[4], uint8_t out[3], const size_t len_out)
 {
     /* decode 4 '6-bit' characters into 3 8-bit binary bytes */
     static const char ro_cd64[] = "|$$$}rstuvwxyz{$$$$$$$>?@ABCDEFGHIJKLMNOPQRSTUVW$$$$$$XYZ[\\]^_`abcdefghijklmnopq";
@@ -74,26 +74,27 @@ inline int ro_b64_decodeblock (const uint8_t in[4], uint8_t out[3], const size_t
     return 0;
 }
 
-inline int ro_b64_encode (const uint8_t *restrict dec, const size_t len_dec,
-                          uint8_t *restrict enc, const size_t len_enc)
+inline int ard_b64_encode (const uint8_t *dec, const size_t len_dec,
+                          uint8_t *enc, const size_t len_enc)
 {
     size_t i = 0, o = 0;
-    if (len_enc >= RO_B64_BUFFER_ENC_LEN(len_dec)) {
+    if (len_enc >= ARD_B64_BUFFER_ENC_LEN(len_dec)) {
         for (i = o = 0; i < len_dec; i += 3, o += 4) {
-            ro_b64_encodeblock (dec + i, enc + o, len_dec - i);
+            ard_b64_encodeblock (dec + i, enc + o, len_dec - i);
         }
     } else {
         return -1;
     }
+    return 0;
 }
 
-inline int ro_b64_decode (const uint8_t *restrict enc, const size_t len_enc,
-                          uint8_t *restrict dec, const size_t len_dec)
+inline int ard_b64_decode (const uint8_t *enc, const size_t len_enc,
+                          uint8_t *dec, const size_t len_dec)
 {
     size_t i, o;
-    if (len_dec <= RO_B64_BUFFER_DEC_LEN(len_enc)) {
+    if (len_dec <= ARD_B64_BUFFER_DEC_LEN(len_enc)) {
         for (i = o = 0; i < len_enc; i += 4, o += 3) {
-            if (ro_b64_decodeblock (enc + i, dec + o, len_dec - o) == -1) {
+            if (ard_b64_decodeblock (enc + i, dec + o, len_dec - o) == -1) {
                 return -1;
             }
         }

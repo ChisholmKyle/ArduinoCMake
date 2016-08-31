@@ -31,12 +31,12 @@ extern "C" {
 /**
  * default seed for CRC function
  */
-#define RO_CRC16_SEED 0xffff
+#define ARD_CRC16_SEED 0xffff
 
 /**
  * default final value for CRC function
  */
-#define RO_CRC16_FINAL 0x0000
+#define ARD_CRC16_FINAL 0x0000
 
 /**
  * @brief      Calculates CRC checksum (crc16-ccitt) for a byte array.
@@ -48,7 +48,7 @@ extern "C" {
  *
  * @return     The CRC checksum.
  */
-inline uint16_t ro_crc16_ccitt(const uint8_t *restrict data, const size_t len, const uint16_t seed, const uint16_t final)
+inline uint16_t ard_crc16_ccitt(const uint8_t *data, const size_t len, const uint16_t seed, const uint16_t final)
 {
     // lookup table
     static const uint16_t crc_table [256] = {
@@ -116,9 +116,9 @@ inline uint16_t ro_crc16_ccitt(const uint8_t *restrict data, const size_t len, c
  *
  * @return     Boolean `true` if checksum for the array is valid, `false` otherwise
  */
-inline bool ro_crc16_ccitt_test(const uint8_t *restrict data, const size_t len) {
-    uint16_t crc_result = ro_crc16_ccitt(data, len, RO_CRC16_SEED, RO_CRC16_FINAL);
-    return (crc_result == RO_CRC16_FINAL);
+inline bool ard_crc16_ccitt_test(const uint8_t *data, const size_t len) {
+    uint16_t crc_result = ard_crc16_ccitt(data, len, ARD_CRC16_SEED, ARD_CRC16_FINAL);
+    return (crc_result == ARD_CRC16_FINAL);
 }
 
 /**
@@ -133,8 +133,8 @@ inline bool ro_crc16_ccitt_test(const uint8_t *restrict data, const size_t len) 
  * @return     The CRC checksum. The data input parameter is also appended with
  *             the 2 checksum bytes.
  */
-inline uint16_t ro_crc16_ccitt_append(uint8_t *restrict data, const size_t len) {
-    uint16_t crc_result = ro_crc16_ccitt(data, len, RO_CRC16_SEED, RO_CRC16_FINAL);
+inline uint16_t ard_crc16_ccitt_append(uint8_t *data, const size_t len) {
+    uint16_t crc_result = ard_crc16_ccitt(data, len, ARD_CRC16_SEED, ARD_CRC16_FINAL);
     data [len] = (unsigned char)((crc_result >> 8) & 0xff);
     data [len + 1] = (unsigned char)(crc_result & 0xff);
     return crc_result;
