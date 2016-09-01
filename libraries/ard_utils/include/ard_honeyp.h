@@ -2,8 +2,7 @@
 #ifndef ARD_HONEYP_H
 #define ARD_HONEYP_H
 
-#include "Arduino.h"
-#include "Wire.h"
+#include <stdint.h>
 
 // bits in hex
 #define ARD_HONEYP_BIT_0  0x01
@@ -16,48 +15,63 @@
 #define ARD_HONEYP_BIT_7  0x80
 
 // address
-#define ARD_HONEYP_ADDRESS 0x28
+#define ARD_HONEYP_ADDRESS_DEFAULT 0x28
 
-// read bit
-#define ARD_HONEYP_READ_BIT ARD_HONEYP_BIT_0
+// scaling
+#define ARD_HONEYP_SCALE_90P_14BIT 14745
+#define ARD_HONEYP_SCALE_10P_14BIT 1638
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+typedef struct ArdHoneyp {
+    struct {
+        double a;
+        double b;
+    } scale;
+    struct {
+        uint16_t umin;
+        uint16_t umax;
+        double pmin;
+        double pmax;
+    } limits;
+    uint8_t preg;
+} ArdHoneyp;
 
-inline int ard_honeyp_read_raw(uint16_t *data) {
+int ard_honeyp_read_raw(const uint8_t reg_addr, uint16_t *data);
 
-    uint8_t bytes_in[2] = {0};
-
-    Wire.requestFrom(ARD_HONEYP_ADDRESS, 2, 1);
-    if (Wire.available() >= 2)  {
-        bytes_in[0] = Wire.read();
-        bytes_in[1] = Wire.read();
-    } else {
-        return -1;
-    }
-
-    /* diagnostics */
-    uint8_t s = bytes_in[0] >> 6;
-
-    /* bit-shift to 14-bits and copy data */
-    bytes_in[0] &= 0x3f;
-    memcpy(data, bytes_in, sizeof(uint16_t));
-
-    if (s == 0) {
-        /* new data */
-        return 0;
-    } else if (s == 2) {
-        /* stale data */
-        return 1;
-    } else {
-        /* error */
-        return -1;
-    }
+inline void ard_honeyp_setscale(ArdHoneyp * pr) {
+    pr->scale.a = ((double) (pr->limits.pmax - pr->limits.pmin)) / ((double) (ARD_HONEYP_SCALE_90P_14BIT - ARD_HONEYP_SCALE_10P_14BIT));
+    pr->scale.b = (double) pr->limits.pmin;
+    pr->limits.umin = ARD_HONEYP_SCALE_10P_14BIT;
+    pr->limits.umax = ARD_HONEYP_SCALE_90P_14BIT;
 }
 
-#ifdef __cplusplus
+/**
+ * @brief      Read i2c honeywell pressure sensor
+ *
+ * @param      pr    { parameter_description }
+ * @param      out   output (psi)
+ *
+ * @return     { description_of_the_return_value }
+ */
+inline int ard_honeyp_read(ArdHoneyp * pr, double *out) {
+
+    /* sensor: pressure */
+    uint16_t raw_val;
+    int retval = ard_honeyp_read_raw(pr->preg, &raw_val);
+    if (retval >= 0) {
+        // saturate input
+        if (raw_val < pr->limits.umin) {
+            raw_val = pr->limits.umin;
+            retval = 2;
+        } else if  (raw_val > pr->limits.umax) {
+            raw_val = pr->limits.umax;
+            retval = 2;
+        }
+        // scale and offset
+        (*out) = ((double) (raw_val - pr->limits.umin)) * pr->scale.a + pr->scale.b;
+    }
+    return retval;
+
 }
-#endif
+
 
 #endif

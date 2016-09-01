@@ -73,10 +73,8 @@ inline bool ard_traj_seq_timed_step(ArdTrajSeqTimed *seq_timed, int *seq_out, co
  * @param[in]  delay_us   The delay us
  */
 inline void ard_traj_seq_timed_reset(ArdTrajSeqTimed *seq_timed, const unsigned long time_us) {
-
     seq_timed->target_us = time_us;
     seq_timed->seq.index = 0;
-
 }
 
 #ifdef __cplusplus

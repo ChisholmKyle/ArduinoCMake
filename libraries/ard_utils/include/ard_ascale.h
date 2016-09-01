@@ -63,6 +63,7 @@ inline double ard_asc_scale_input(struct ArdAScale *asc) {
 
 }
 
+
 #ifdef __cplusplus
 }
 #endif
