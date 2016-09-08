@@ -41,6 +41,26 @@ inline bool ard_timing_step(ArdTiming *timing) {
     return false;
 }
 
+typedef struct ArdTimingTimeout {
+    bool isset;
+    unsigned long prev;
+    unsigned long wait_us;
+} ArdTimingTimeout;
+
+inline void ard_timing_timeout_set(ArdTimingTimeout *timing, const unsigned long now, const unsigned long wait_us) {
+    timing->isset = true;
+    timing->prev = now;
+    timing->wait_us = wait_us;
+}
+
+inline bool ard_timing_timeout_check(ArdTimingTimeout *timing, const unsigned long now) {
+    if (timing->isset && now - timing->prev > timing->wait_us) {
+        timing->isset = false;
+        return true;
+    }
+    return false;
+}
+
 #ifdef __cplusplus
 }
 #endif

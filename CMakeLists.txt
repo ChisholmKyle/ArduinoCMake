@@ -15,9 +15,9 @@ endif()
 # 1. make sure avr-gcc is in PATH
 # 2. set environment variables ARDUINO_ROOT and ARDUINO_CMAKE
 # 3. run the following command:
-# cmake -G "Unix Makefiles" .. 
-#       -DCMAKE_TOOLCHAIN_FILE="${ARDUINO_CMAKE}/AVRtoolchain.cmake" 
-#       -DARDUINO_ROOT="${ARDUINO_ROOT}" 
+# cmake -G "Unix Makefiles" ..
+#       -DCMAKE_TOOLCHAIN_FILE="${ARDUINO_CMAKE}/AVRtoolchain.cmake"
+#       -DARDUINO_ROOT="${ARDUINO_ROOT}"
 #       -DARDUINO_CMAKE="${ARDUINO_CMAKE}"
 
 # tested with:
@@ -36,6 +36,8 @@ set(FIRMWARE_TARGET firmware)
 # ----------------------------
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${ARDUINO_CMAKE}/modules")
 
+# optional full printf functionality
+# set(AVR_PRINTF_FULL True)
 # arduino board
 include("ArduinoProMini5V328")
 # upload port and serial picocom communications settings
@@ -43,15 +45,17 @@ set(ARDUINO_PORT "COM3")
 set(ARDUINO_SERIAL_SPEED "115200")
 # arduino cmake script
 include("Arduino")
-# optional Wire library to include (from Arduino)
+# optional core libraries to include (from Arduino)
 # include("ArduinoLibraryWire")
+# include("ArduinoLibrarySPI")
 
 # ################ #
 # custom libraries #
 # ################ #
 
 # optional custom library to include
-# include("ArduinoLibraryArdUtils")
+# set(ARDUINO_EXTRA_LIBRARIES "ard_utils" "TimerOne")
+# include("ArduinoExtraLibraries")
 
 # ##################### #
 # Firmware source files #
