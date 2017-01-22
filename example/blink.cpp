@@ -11,7 +11,7 @@ void loop() {
     Serial.println("LED off");
     digitalWrite(PIN_LED, LOW);    // Set the LED off
     delay(1000);                   // Wait for one second
-} 
+}
 
 int main(void)
 {

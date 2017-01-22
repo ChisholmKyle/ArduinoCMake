@@ -6,24 +6,29 @@
 # http://www.tmpsantos.com.br/en/2010/12/arduino-uno-ubuntu-cmake/
 # http://forum.arduino.cc/index.php?topic=244741.0
 
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_LIST_DIR}/modules")
+
 # enable assembler language
 enable_language(ASM)
+
+# board
+include("Arduino${ARDUINO_BOARD_NAME}")
 
 # C only fine tunning
 set(TUNING_FLAGS "-Wl,--gc-sections -ffunction-sections -fdata-sections -fno-tree-scev-cprop -flto -fno-fat-lto-objects")
 set(WARNING_FLAGS "-Wall -pedantic -Werror")
 
-if(AVR_PRINTF_FULL)
+if(ARDUINO_AVR_PRINTF_FULL)
     set(TUNING_FLAGS "-Wl,-u,vfprintf ${TUNING_FLAGS}")
 endif()
 
 # Compilation flags
-set(CMAKE_ASM_FLAGS "-mmcu=${ARDUINO_MCU} -DF_CPU=${ARDUINO_FCPU} -DARDUINO_ARCH_AVR ${ARDUINO_BOARD_DEFINES}")
+set(CMAKE_ASM_FLAGS "-mmcu=${ARDUINO_MCU} -DF_CPU=${ARDUINO_FCPU} -DARDUINO_ARCH_AVR ${ARDUINO_EXTRA_FLAGS}")
 set(CMAKE_CXX_FLAGS "${CMAKE_ASM_FLAGS} ${TUNING_FLAGS} -fuse-linker-plugin -fno-threadsafe-statics ${WARNING_FLAGS} -std=gnu++14 -Os")
-set(CMAKE_C_FLAGS "${CMAKE_ASM_FLAGS} ${TUNING_FLAGS} -fno-fat-lto-objects ${WARNING_FLAGS} --std=gnu99 -Os")
+set(CMAKE_C_FLAGS "${CMAKE_ASM_FLAGS} ${TUNING_FLAGS} ${WARNING_FLAGS} --std=gnu99 -Os")
 set(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -lm" )
 
-if(AVR_PRINTF_FULL)
+if(ARDUINO_AVR_PRINTF_FULL)
     set(CMAKE_EXE_LINKER_FLAGS "-lprintf_flt ${CMAKE_EXE_LINKER_FLAGS}")
 endif()
 
@@ -76,11 +81,25 @@ file(GLOB ARDUINO_SOURCE_FILES
 # remove main
 list(REMOVE_ITEM ARDUINO_SOURCE_FILES "${ARDUINO_CORE_DIR}/main.cpp")
 
+# core library sources
+if (ARDUINO_CORE_LIBRARIES)
+    foreach(ARDUINO_CORE_LIB_NAME ${ARDUINO_CORE_LIBRARIES})
+        include("ArduinoLibrary${ARDUINO_CORE_LIB_NAME}")
+    endforeach()
+endif()
+
+# extra library sources
+if (ARDUINO_LIBS)
+    include("ArduinoExtraLibraries")
+endif()
+
+# port
 set(PORT $ENV{ARDUINO_PORT})
 if (NOT PORT)
     set(PORT ${ARDUINO_PORT})
 endif()
 
+# programs
 find_program(AVROBJCOPY "avr-objcopy")
 find_program(AVRDUDE "avrdude")
 find_program(PICOCOM "picocom")
