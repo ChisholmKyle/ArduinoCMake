@@ -84,6 +84,11 @@ list(REMOVE_ITEM ARDUINO_SOURCE_FILES "${ARDUINO_CORE_DIR}/main.cpp")
 # core library sources
 if (ARDUINO_CORE_LIBRARIES)
     foreach(ARDUINO_CORE_LIB_NAME ${ARDUINO_CORE_LIBRARIES})
+        # 400 kHz i2C if Wire library is used
+        if (ARDUINO_CORE_LIB_NAME STREQUAL "Wire")
+            set(CMAKE_CXX_FLAGS "-DTWI_FREQ=400000L ${CMAKE_CXX_FLAGS}")
+            set(CMAKE_C_FLAGS "-DTWI_FREQ=400000L ${CMAKE_C_FLAGS}")
+        endif()
         include("ArduinoLibrary${ARDUINO_CORE_LIB_NAME}")
     endforeach()
 endif()
