@@ -15,7 +15,7 @@ enable_language(ASM)
 include("Arduino${ARDUINO_BOARD_NAME}")
 
 # C only fine tunning
-set(TUNING_FLAGS "-Wl,--gc-sections -ffunction-sections -fdata-sections -fno-tree-scev-cprop -flto -fno-fat-lto-objects")
+set(TUNING_FLAGS "-Os -Wl,--gc-sections -ffunction-sections -fdata-sections -fno-tree-scev-cprop -flto -fno-fat-lto-objects")
 set(WARNING_FLAGS "-Wall -pedantic -Werror")
 
 if(ARDUINO_AVR_PRINTF_FULL)
@@ -24,8 +24,8 @@ endif()
 
 # Compilation flags
 set(CMAKE_ASM_FLAGS "-mmcu=${ARDUINO_MCU} -DF_CPU=${ARDUINO_FCPU} -DARDUINO_ARCH_AVR ${ARDUINO_EXTRA_FLAGS}")
-set(CMAKE_CXX_FLAGS "${CMAKE_ASM_FLAGS} ${TUNING_FLAGS} -fuse-linker-plugin -fno-threadsafe-statics ${WARNING_FLAGS} -std=gnu++14 -Os")
-set(CMAKE_C_FLAGS "${CMAKE_ASM_FLAGS} ${TUNING_FLAGS} ${WARNING_FLAGS} --std=gnu99 -Os")
+set(CMAKE_CXX_FLAGS "${CMAKE_ASM_FLAGS} ${TUNING_FLAGS} -fuse-linker-plugin -fno-threadsafe-statics ${WARNING_FLAGS} -std=gnu++14")
+set(CMAKE_C_FLAGS "${CMAKE_ASM_FLAGS} ${TUNING_FLAGS} ${WARNING_FLAGS} --std=gnu99")
 set(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -lm" )
 
 if(ARDUINO_AVR_PRINTF_FULL)
