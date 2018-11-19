@@ -14,18 +14,24 @@ enable_language(ASM)
 # board
 include("Arduino${ARDUINO_BOARD_NAME}")
 
-# C only fine tunning
-set(TUNING_FLAGS "-Os -Wl,--gc-sections -ffunction-sections -fdata-sections -fno-tree-scev-cprop -flto -fno-fat-lto-objects")
+# -fno-tree-scev-cprop
+
+# C/C++ fine tunning
+set(TUNING_C_FLAGS "-Os -Wl,--gc-sections -ffunction-sections -fdata-sections -flto -fno-fat-lto-objects")
+set(TUNING_CXX_FLAGS "-Os -Wl,--gc-sections -ffunction-sections -fdata-sections -flto -fno-fat-lto-objects -fuse-linker-plugin -fno-threadsafe-statics")
+
+set(AVR_FLAGS "-mmcu=${ARDUINO_MCU} -DF_CPU=${ARDUINO_FCPU} -DARDUINO_ARCH_AVR ${ARDUINO_EXTRA_FLAGS}")
 set(WARNING_FLAGS "-Wall -pedantic -Werror")
 
 if(ARDUINO_AVR_PRINTF_FULL)
-    set(TUNING_FLAGS "-Wl,-u,vfprintf ${TUNING_FLAGS}")
+    set(TUNING_C_FLAGS "-Wl,-u,vfprintf ${TUNING_C_FLAGS}")
+    set(TUNING_CXX_FLAGS "-Wl,-u,vfprintf ${TUNING_CXX_FLAGS}")
 endif()
 
 # Compilation flags
-set(CMAKE_ASM_FLAGS "-mmcu=${ARDUINO_MCU} -DF_CPU=${ARDUINO_FCPU} -DARDUINO_ARCH_AVR ${ARDUINO_EXTRA_FLAGS}")
-set(CMAKE_CXX_FLAGS "${CMAKE_ASM_FLAGS} ${TUNING_FLAGS} -fuse-linker-plugin -fno-threadsafe-statics ${WARNING_FLAGS} -std=gnu++14")
-set(CMAKE_C_FLAGS "${CMAKE_ASM_FLAGS} ${TUNING_FLAGS} ${WARNING_FLAGS} --std=gnu99")
+set(CMAKE_ASM_FLAGS "${AVR_FLAGS} -x assembler-with-cpp -flto")
+set(CMAKE_CXX_FLAGS "-std=gnu++14 ${AVR_FLAGS} ${TUNING_CXX_FLAGS} ${WARNING_FLAGS}")
+set(CMAKE_C_FLAGS "-std=gnu11 ${AVR_FLAGS} ${TUNING_C_FLAGS} ${WARNING_FLAGS}")
 set(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -lm" )
 
 if(ARDUINO_AVR_PRINTF_FULL)
@@ -53,8 +59,8 @@ if(NOT ARDUINO_ROOT)
         /opt/local/arduino*
         /Applications/Arduino.app/Contents/Java
         /Applications/Arduino.app/Contents/Resources/Java
-        "/c/Program Files (x86)/Arduino"
-        "/c/Program Files/Arduino"
+        "C:/Program Files (x86)/Arduino"
+        "C:/Program Files/Arduino"
     )
     find_path(ARDUINO_ROOT
         NAMES lib/version.txt
@@ -106,7 +112,7 @@ endif()
 
 # programs
 find_program(AVROBJCOPY "avr-objcopy")
-find_program(AVRDUDE "avrdude")
+find_program(AVRDUDE "avrdude" PATHS "${ARDUINO_ROOT}/hardware/tools/avr/bin")
 find_program(PICOCOM "picocom")
 
 if(AVROBJCOPY AND AVRDUDE)
@@ -123,15 +129,9 @@ if(AVROBJCOPY AND AVRDUDE)
 
     add_custom_target(flash)
     add_dependencies(flash hex)
-    if(ARDUINO_PROTOCOL STREQUAL "usbasp")
-        add_custom_command(TARGET flash POST_BUILD
-            COMMAND ${AVRDUDE} -C ${AVRDUDE_CONFIG} -v -p ${ARDUINO_MCU} -c usbasp -U flash:w:firmware.hex:i
-        )
-    else()
-        add_custom_command(TARGET flash POST_BUILD
-            COMMAND ${AVRDUDE} -C ${AVRDUDE_CONFIG} -v -p ${ARDUINO_MCU} -c ${ARDUINO_PROTOCOL} -P ${PORT} -b ${ARDUINO_UPLOAD_SPEED} -D -U flash:w:${FIRMWARE_TARGET}.hex:i
-        )
-    endif()
+    add_custom_command(TARGET flash POST_BUILD
+        COMMAND "${AVRDUDE}" -C "${AVRDUDE_CONFIG}" -v -p ${ARDUINO_MCU} -c ${ARDUINO_PROTOCOL} -P ${PORT} -b ${ARDUINO_UPLOAD_SPEED} -D -U flash:w:${FIRMWARE_TARGET}.hex:i
+    )
 
 endif()
 

@@ -18,7 +18,7 @@ In order to communicate with you Arduino through a serial connection, you need
 
 - picocom (Unix-like OS only)
 
-Installing [Arduino](https://www.arduino.cc/en/Main/Software) for your system is easy, but other prerequisites may be more difficult. The instructions below may be followed below to use *nix-like development tools and environments.
+First install [Arduino](https://www.arduino.cc/en/Main/Software) for your system. Installation for other prerequisites are described below.
 
 ### Linux (Debian 8)
 
@@ -41,43 +41,58 @@ If you want a package manager for Mac, [Macports](https://www.macports.org/) may
     sudo port install git avr-gcc avr-binutils avr-libc avrdude picocom cmake gmake
     ```
 
-### Windows (Ubuntu Bash)
+### Windows (MYSY2)
 
-TODO: It would be interesting to try the (beta) [Windows 10 Linux/Ubuntu bash](https://msdn.microsoft.com/en-us/commandline/wsl/about) environment, especially if picocom can be used.
+This is not the only way to use Arduino and CMake on Windows, but it is likely a good choice for cross-platform development.
 
-### Windows (MSYS2)
-
-This is not the only way to use Arduino and CMake on Windows, but it is likely a good choice for you if you're comfortable with Linux or Mac OS X.
-
-1. Install and update [MSYS2](https://msys2.github.io/)
+1. To get MinGW and other useful software, install [MSYS2](https://msys2.github.io/). If using [Chocolatey](https://chocolatey.org/), install git and msys2 in one go:
+    ```powershell
+    choco install -y msys2 git
+    ```
+1. Install git and [CMake](https://cmake.org/download/). If using Chocolatey, run:
+    ```powershell
+    choco install cmake --installargs 'ADD_CMAKE_TO_PATH=System'
+    ```
 1. Download and extract the [Amtel AVR 8-bit Toolchain for Windows](http://www.atmel.com/tools/atmelavrtoolchainforwindows.aspx).
-1. Set your Windows PATH environment variable to include the Amtel AVR toolchain 'bin' directory.
 1. In your MSYS2 MinGW32 shell, install dependencies with the command
 
     ```bash
-    pacman -Syu msys/git msys/make mingw32/mingw-w64-i686-cmake mingw32/mingw-w64-i686-avrdude
+    pacman -Syu mingw64/mingw-w64-x86_64-make
     ```
+1. Set your Windows PATH environment variable to include the Amtel AVR toolchain 'bin' directory, the path to Arduino's `avrdude.exe`, and to MinGW's `mingw32-make.exe`. For example, temporarily set the environment variable in powershell:
+    ```powershell
+    $env:PATH="$env:PATH;C:\tools\avr8-gnu-toolchain-win32_x86\bin"
+    $env:PATH="$env:PATH;C:\Program Files (x86)\Arduino\hardware\tools\avr\bin"
+    $env:PATH="$env:PATH;C:\tools\msys64\mingw64\bin"
+    ```
+    Note that these paths may be different, depending on your install locations.
 
 ## Compile Example
 
-1. Follow instructions to install prerequisites (above), then clone and copy the example to a new folder called 'blink'
-
+1. Clone and copy the example to a new folder called 'blink'
     ```bash
     git clone https://github.com/ChisholmKyle/ArduinoCMake.git
     cp -r ArduinoCMake/example blink
     ```
-
-1. Set environment variable `ARDUINO_CMAKE` to the path of the root directory of this repository and `ARDUINO_ROOT` to the Arduino SDK. Note that the `ARDUINO_ROOT` directory may be different for your installed Arduino SDK.
-
+    On **Windows** in powershell, for example:
+    ```powershell
+    git clone https://github.com/ChisholmKyle/ArduinoCMake.git
+    cp ArduinoCMake/example blink
+    ```
+1. Set environment variable `ARDUINO_CMAKE` to the path of the root directory of this repository and `ARDUINO_ROOT` to the Arduino SDK (may be different on your system).
     ```bash
     export ARDUINO_ROOT=/Applications/Arduino.app/Contents/Java
     export ARDUINO_CMAKE="$(pwd)/ArduinoCMake"
     ```
+    On **Windows** in powershell, for example:
+    ```powershell
+    $env:ARDUINO_ROOT="C:/Program Files (x86)/Arduino"
+    $env:ARDUINO_CMAKE="D:/Projects/ArduinoCMake"
+    ```
 
 2. In the blink folder "CMakeLists.txt" file, set the `ARDUINO_PORT` and `ARDUINO_BOARD_NAME` to your serial port and board.
 
-3. Compile using cmake in a subfloder named 'build'.
-
+3. Compile using cmake in a subfolder named 'build'.
     ```bash
     cd blink && mkdir build && cd build
     cmake -G "Unix Makefiles" .. \
@@ -86,12 +101,23 @@ This is not the only way to use Arduino and CMake on Windows, but it is likely a
           -DARDUINO_CMAKE="${ARDUINO_CMAKE}"
     make
     ```
+    On **Windows**, you may need to force cmake to ignore the warning about sh.exe on you path and use the "MinGW Makefiles" generator:
+    ```powershell
+    mkdir build
+    cd build
+    cmake -G "MinGW Makefiles" .. `
+        -DCMAKE_TOOLCHAIN_FILE="$env:ARDUINO_CMAKE/AVRtoolchain.cmake" `
+        -DARDUINO_ROOT="$env:ARDUINO_ROOT" `
+        -DARDUINO_CMAKE="$env:ARDUINO_CMAKE" `
+        -DCMAKE_SH="CMAKE_SH-NOTFOUND"
+    mingw32-make
+    ```
 
 3. If you want to upload to your Arduino, run
-
     ```bash
     make flash
     ```
+    On **Windows**, use `mingw32-make` instead of `make`.
 
 3. If you want to communicate with your Arduino and display serial data, make sure [`picocom`](https://github.com/npat-efault/picocom) is installed and run
 
@@ -100,17 +126,14 @@ This is not the only way to use Arduino and CMake on Windows, but it is likely a
     ```
     If you don't have picocom installed, you can use the Arduino IDE serial monitor instead.
 
-
 ## Configuration
 
 ### Environment variables
-
 
 | Variable | Notes |
 | ---- | ----- |
 | `ARDUINO_ROOT` | Arduino SDK root directory. |
 | `ARDUINO_CMAKE` | Path to this repository (ArduinoCMake). |
-
 
 ### Target, board, and serial communications
 
@@ -127,6 +150,9 @@ In your CMakeLists.txt file, set the board variable `ARDUINO_BOARD_NAME`. Consul
 | ProMini5V168 |
 | ProMini3V328 |
 | ProMini5V328 |
+| Nano328 |
+| Nano328old |
+| Nano168 |
 
 The serial port for communications and uploading to the Arduino needs to be set with the variable `ARDUINO_PORT`. If serial communications are being used with the Arduino and picocom, the `ARDUINO_SERIAL_SPEED` needs to be set. The following table describes the variables:
 
@@ -174,5 +200,5 @@ See the include cmake file [modules/ArduinoProMini5V328.cmake](modules/ArduinoPr
 | `ARDUINO_VARIANT` | Name which corresponds to your board variant type. Set `ARDUINO_VARIANT` to the `build.variant` value in **boards.txt** for your board.  |
 | `ARDUINO_MCU` | MCU part definition. Set `ARDUINO_MCU` to the `build.mcu` value in **boards.txt** for your board. |
 | `ARDUINO_FCPU` | Clock frequency. Set `ARDUINO_FCPU` to the `build.f_cpu` value in **boards.txt** for your board. |
-| `ARDUINO_EXTRA_FLAGS` | Compiler-specific flags for the board. Set `ARDUINO_FCPU` to the `build.extra_flags` value in **boards.txt** for your board. |
+| `ARDUINO_EXTRA_FLAGS` | Compiler-specific flags for the board. Set `ARDUINO_EXTRA_FLAGS` to the `build.extra_flags` value in **boards.txt** for your board. |
 | `ARDUINO_UPLOAD_SPEED` | Upload serial baud rate speed to flash your Arduino. Set `ARDUINO_UPLOAD_SPEED` to the `upload.speed` value in **boards.txt** for your board. |
