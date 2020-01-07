@@ -1,6 +1,8 @@
 # ArduinoCMake
 A simple CMake build project for Arduino and AVR microcontrollers.
 
+**Note** This repository is now archived. It was created for primarily personal use and will no longer be maintained. I've moved to Platform.IO and VS Code for embedded Arduino development.
+
 ## Prerequisites
 
 - [Arduino](https://www.arduino.cc/en/Main/Software)
